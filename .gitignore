@@ -1,0 +1,16 @@
+# Ignore Python build artifacts
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+
+# Ignore Python distribution artifacts
+dist/
+build/
+*.egg-info/
+*.egg
+
+# Ignore other build artifacts
+.env
+myenv/
+bloodcount.db

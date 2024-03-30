@@ -1,0 +1,19 @@
+version: '3.8'
+services:
+  web:
+    build: ./fastapi
+    env_file:
+      - .env
+    ports:
+      - "8080:80"
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  discord-bot:
+    build: 
+      context: ./discordbot
+    env_file:
+      - .env
