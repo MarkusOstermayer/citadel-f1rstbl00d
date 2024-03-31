@@ -12,5 +12,6 @@ build/
 
 # Ignore other build artifacts
 .env
+env/
 myenv/
 bloodcount.db

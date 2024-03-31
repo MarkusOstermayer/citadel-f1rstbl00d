@@ -1,19 +1,21 @@
-FROM python:3.11-slim
+FROM python:3.11-slim-bookworm
 
 # Install supervisord
 RUN apt-get update && apt-get install -y supervisor
 
+# Set workdir
 WORKDIR /app
-COPY . /app
 
-# Install requirements
+# Copy and Install requirements
+COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
-EXPOSE 80
 
-# Copy supervisord configuration file
+# Copy app files and supervisord configuration file
+COPY ./webdc webdc
 COPY ./supervisord.conf /etc/supervisor/conf.d/supervisord.conf
 
-WORKDIR /fastapi
+# expose port 80
+EXPOSE 80
 
 # Run supervisord
 CMD ["/usr/bin/supervisord"]

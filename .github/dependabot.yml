@@ -1,11 +1,11 @@
 version: 2
 updates:
   - package-ecosystem: "pip"
-    directory: "/webdc"
+    directory: "/"
     schedule:
       interval: "weekly"
       day: "monday"
     groups:
-      api:
+      pip:
         patterns:
           - "*"
