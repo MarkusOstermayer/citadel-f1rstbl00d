@@ -1,0 +1,20 @@
+version: 2
+updates:
+  - package-ecosystem: "pip"
+    directory: "/fastapi"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+    groups:
+      api:
+        patterns:
+          - "*"
+  - package-ecosystem: "pip"
+    directory: "/discordbot"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+    groups:
+      bot:
+        patterns:
+          - "*"
