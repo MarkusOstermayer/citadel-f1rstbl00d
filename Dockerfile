@@ -11,7 +11,7 @@ RUN pip install --no-cache-dir -r requirements.txt
 EXPOSE 80
 
 # Copy supervisord configuration file
-COPY supervisord.conf /etc/supervisor/conf.d/supervisord.conf
+COPY ../supervisord.conf /etc/supervisor/conf.d/supervisord.conf
 
 # Run supervisord
 CMD ["/usr/bin/supervisord"]
