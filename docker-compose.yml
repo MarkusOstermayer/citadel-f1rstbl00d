@@ -2,8 +2,7 @@ version: '3.8'
 services:
   webdc:
     build: 
-      context: ./fastapi
-      dockerfile: ../Dockerfile
+      context: .
     env_file:
       - .env
     ports:
