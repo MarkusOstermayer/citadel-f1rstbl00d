@@ -1,6 +1,6 @@
 from dotenv import load_dotenv
 from sqlalchemy.exc import IntegrityError
-from fastapi import FastAPI, Depends, HTTPException
+from fastapi import FastAPI, Depends, HTTPException, Query
 from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
 from starlette.status import HTTP_401_UNAUTHORIZED
 from sqlalchemy.orm import Session
@@ -15,6 +15,7 @@ load_dotenv()
 app = FastAPI(title="FirstBlood API", description="API for FirstBlood records.")
 security = HTTPBearer()
 
+
 def authorize(credentials: HTTPAuthorizationCredentials = Depends(security)):
     """
     Check authorization during requests.
@@ -28,15 +29,48 @@ def authorize(credentials: HTTPAuthorizationCredentials = Depends(security)):
 
 
 @app.get("/firstbloods/all/", dependencies=[Depends(authorize)], tags=["FirstBloods"])
-def read_all_firstbloods(db: Session = Depends(get_db)):
+def read_all_firstbloods(
+    update_was_sent: Optional[bool] = Query(
+        False, description="Updates the was_sent value for entries"
+    ),
+    db: Session = Depends(get_db),
+):
     """
     Get all firstbloods in the database.
     """
-    firstbloods = db.query(models.FirstBlood).all() 
-    return firstbloods 
+    firstbloods = db.query(models.FirstBlood).all()
+    if update_was_sent:
+        entries_to_send = []
+        for firstblood in firstbloods:
+            if not firstblood.was_sent:
+                data = {
+                    "event_id": firstblood.event_id,
+                    "challenge_id": firstblood.challenge_id,
+                    "date": firstblood.date,
+                    "user_id": firstblood.user_id,
+                }
+                entries_to_send.append(data)
+                firstblood.was_sent = True
 
-@app.get("/firstbloods/filter/", dependencies=[Depends(authorize)], tags=["FirstBloods"])
-def read_filtered_firstbloods(event_id: Optional[int] = None, start_time: Optional[datetime] = None, end_time: Optional[datetime] = None, challenge_id: Optional[int] = None, db: Session = Depends(get_db)):
+        # Write the new entries to the sent_firstbloods table
+        db.commit()
+        return entries_to_send
+    return firstbloods
+
+
+@app.get(
+    "/firstbloods/filter/", dependencies=[Depends(authorize)], tags=["FirstBloods"]
+)
+def read_filtered_firstbloods(
+    update_was_sent: Optional[bool] = Query(
+        False, description="Updates the was_sent value for entries"
+    ),
+    event_id: Optional[int] = Query(None, description="Event ID to filter by"),
+    start_time: Optional[datetime] = Query(None, description="Start time to filter by"),
+    end_time: Optional[datetime] = Query(None, description="End time to filter by"),
+    challenge_id: Optional[int] = Query(None, description="Challenge ID to filter by"),
+    db: Session = Depends(get_db),
+):
     """
     Filter FirstBlood records by event_id, start_time, end_time, and challenge_id.
 
@@ -53,10 +87,30 @@ def read_filtered_firstbloods(event_id: Optional[int] = None, start_time: Option
     if challenge_id is not None:
         query = query.filter(models.FirstBlood.challenge_id == challenge_id)
     firstbloods = query.order_by(models.FirstBlood.date.desc()).all()
-    return firstbloods 
+
+    if update_was_sent:
+        entries_to_send = []
+        for firstblood in firstbloods:
+            if not firstblood.was_sent:
+                data = {
+                    "event_id": firstblood.event_id,
+                    "challenge_id": firstblood.challenge_id,
+                    "date": firstblood.date,
+                    "user_id": firstblood.user_id,
+                }
+                entries_to_send.append(data)
+                firstblood.was_sent = True
+
+        # Write the new entries to the sent_firstbloods table
+        db.commit()
+        return entries_to_send
+    return firstbloods
+
 
 @app.post("/firstbloods/add/", dependencies=[Depends(authorize)], tags=["FirstBloods"])
-def create_firstblood(firstblood: schema.FirstBloodCreate, db: Session = Depends(get_db)):
+def create_firstblood(
+    firstblood: schema.FirstBloodCreate, db: Session = Depends(get_db)
+):
     """
     Create a new FirstBlood entry.
 
@@ -70,6 +124,9 @@ def create_firstblood(firstblood: schema.FirstBloodCreate, db: Session = Depends
         db.commit()
     except IntegrityError:
         db.rollback()
-        raise HTTPException(status_code=400, detail="A record with the same event_id and challenge_id already exists.")
+        raise HTTPException(
+            status_code=400,
+            detail="A record with the same event_id and challenge_id already exists.",
+        )
     db.refresh(db_firstblood)
-    return db_firstblood   
+    return db_firstblood
