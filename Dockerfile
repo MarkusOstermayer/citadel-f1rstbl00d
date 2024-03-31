@@ -7,7 +7,7 @@ WORKDIR /app
 COPY . /app
 
 # Install requirements
-RUN pip install --no-cache-dir -r requirements.txt
+RUN pip install --no-cache-dir -r ../requirements.txt
 EXPOSE 80
 
 # Copy supervisord configuration file
