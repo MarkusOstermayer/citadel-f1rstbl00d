@@ -47,7 +47,10 @@ def read_all_firstbloods(
                     "event_id": firstblood.event_id,
                     "challenge_id": firstblood.challenge_id,
                     "date": firstblood.date,
-                    "user_id": firstblood.user_id,
+                    "username": firstblood.username,
+                    "challenge_name": firstblood.challenge_name,
+                    "challenge_category": firstblood.challenge_category,
+                    "challenge_difficulty": firstblood.challenge_difficulty,
                 }
                 entries_to_send.append(data)
                 firstblood.was_sent = True
@@ -96,7 +99,10 @@ def read_filtered_firstbloods(
                     "event_id": firstblood.event_id,
                     "challenge_id": firstblood.challenge_id,
                     "date": firstblood.date,
-                    "user_id": firstblood.user_id,
+                    "username": firstblood.username,
+                    "challenge_name": firstblood.challenge_name,
+                    "challenge_category": firstblood.challenge_category,
+                    "challenge_difficulty": firstblood.challenge_difficulty,
                 }
                 entries_to_send.append(data)
                 firstblood.was_sent = True

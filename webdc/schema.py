@@ -6,6 +6,9 @@ from datetime import datetime
 
 class FirstBloodCreate(BaseModel):
     date: Optional[datetime] = None
-    user_id: int
+    username: str
     event_id: int
     challenge_id: int
+    challenge_name: str
+    challenge_category: str
+    challenge_difficulty: str
