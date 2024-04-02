@@ -78,7 +78,7 @@ async def my_background_task():
                         title=f"Challenge: {item['challenge_name']}", color=0xFF0000
                     )
                     embed.set_author(name="CHALLENGE SOLVED (FIRST BLOOD)")
-                    embed.description = f"- Solved by: **@{item['username']}**\n- Time solved: {item['date']}\n- Category: {item['challenge_category']}\n- Difficulty: {item['challenge_difficulty']}\n\n Good job!"
+                    embed.description = f"- Solved by: **@{item['username']}**\n- Time solved: **{item['date'].split('T')[1]}**\n- Category: {item['challenge_category']}\n- Difficulty: {item['challenge_difficulty']}\n\n Good job!"
                     embed.set_thumbnail(
                         url="https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fimg00.deviantart.net%2Fb604%2Fi%2F2012%2F228%2F7%2F5%2Fblood_drop_man_by_unicorn_skydancer08-d5bazt3.png&f=1&nofb=1&ipt=3f0c3f8c5835c0ce8ddcfb70832b1c40ff59054b23266a6f5cbc3977e13d9fc4&ipo=images"
                     )  # Replace with your image URL (Current one is a banger)

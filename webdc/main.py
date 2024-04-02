@@ -6,6 +6,7 @@ from starlette.status import HTTP_401_UNAUTHORIZED
 from sqlalchemy.orm import Session
 from db import get_db
 from datetime import datetime, timezone
+import pytz
 from typing import Optional
 import models, schema
 import os
@@ -121,9 +122,16 @@ def create_firstblood(
     Create a new FirstBlood entry.
 
     - If date is not provided, current time is selected.
+    - Date can be provided in two ways:
+        - As a datetime object. (str)
+        - As a Unix timestamp. (int)
     """
     if firstblood.date is None:
-        firstblood.date = datetime.now(timezone.utc)
+        firstblood.date = datetime.now(pytz.timezone('Europe/Vienna')).replace(microsecond=0)
+    elif isinstance(firstblood.date, int):
+        firstblood.date = datetime.fromtimestamp(firstblood.date)
+    else:
+        firstblood.date = firstblood.date.replace(microsecond=0)
     db_firstblood = models.FirstBlood(**dict(firstblood))
     db.add(db_firstblood)
     try:
