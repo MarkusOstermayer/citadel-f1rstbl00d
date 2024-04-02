@@ -13,9 +13,9 @@ class FirstBloodCreate(BaseModel):
     challenge_category: str
     challenge_difficulty: str
 
-    @validator('date', pre=True)
+    @validator("date", pre=True)
     def unix_timestamp_to_datetime(cls, value):
         if isinstance(value, int):
             return datetime.fromtimestamp(value)
         elif isinstance(value, datetime):
-            return value.strftime('%Y-%m-%dT%H:%M:%S')
+            return value.strftime("%Y-%m-%dT%H:%M:%S")

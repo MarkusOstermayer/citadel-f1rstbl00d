@@ -5,7 +5,7 @@ from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
 from starlette.status import HTTP_401_UNAUTHORIZED
 from sqlalchemy.orm import Session
 from db import get_db
-from datetime import datetime, timezone
+from datetime import datetime
 import pytz
 from typing import Optional
 import models, schema
@@ -127,7 +127,9 @@ def create_firstblood(
         - As a Unix timestamp. (int)
     """
     if firstblood.date is None:
-        firstblood.date = datetime.now(pytz.timezone('Europe/Vienna')).replace(microsecond=0)
+        firstblood.date = datetime.now(pytz.timezone("Europe/Vienna")).replace(
+            microsecond=0
+        )
     elif isinstance(firstblood.date, int):
         firstblood.date = datetime.fromtimestamp(firstblood.date)
     else:
