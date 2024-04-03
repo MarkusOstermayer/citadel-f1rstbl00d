@@ -6,10 +6,12 @@ from discord import Embed
 from dotenv import load_dotenv
 import logging
 
-# Load vars and default values
+# Load env vars
 load_dotenv()
 TOKEN = os.getenv("DISCORD_TOKEN")
 CHANNEL_ID = os.getenv("DISCORD_CHANNEL_ID")
+
+# Create the bot and set permissions and intents
 intents = discord.Intents.default()
 intents.message_content = True
 bot = commands.Bot(command_prefix="$", intents=intents)

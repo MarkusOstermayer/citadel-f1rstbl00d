@@ -69,10 +69,10 @@ def read_filtered_firstbloods(
     update_was_sent: Optional[bool] = Query(
         False, description="Updates the was_sent value for entries"
     ),
-    event_id: Optional[int] = Query(None, description="Event ID to filter by"),
+    event_id: Optional[str] = Query(None, description="Event ID to filter by"),
     start_time: Optional[datetime] = Query(None, description="Start time to filter by"),
     end_time: Optional[datetime] = Query(None, description="End time to filter by"),
-    challenge_id: Optional[int] = Query(None, description="Challenge ID to filter by"),
+    challenge_id: Optional[str] = Query(None, description="Challenge ID to filter by"),
     db: Session = Depends(get_db),
 ):
     """
