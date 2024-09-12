@@ -77,7 +77,7 @@ async def firstblood(ctx):
     It will send a message with the explanation of what FirstBloods are.
     """
     logging.info("Command FIRSTBLOOD called")
-    await ctx.send(data["bot"]["firstblood_info_text"])
+    await ctx.send(config["bot"]["firstblood_info_text"])
 
 
 @tasks.loop(seconds=10)
@@ -99,7 +99,7 @@ async def my_background_task():
                     embed.set_author(name="CHALLENGE SOLVED (FIRST BLOOD)")
                     embed.description = f"- Solved by: **@{item['username']}**\n- Time solved: **{item['date'].split('T')[1]}**\n- Category: {item['challenge_category']}\n- Difficulty: {item['challenge_difficulty']}\n\n Good job!"
                     embed.set_thumbnail(
-                        url=data["bot"]["embed_thumbnail_url"]
+                        url=config["bot"]["embed_thumbnail_url"]
                     )  # Replace with your image URL (Current one is a banger)
                     new_msg = await channel.send(embed=embed)
                     await new_msg.add_reaction("🩸")
