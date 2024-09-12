@@ -1,0 +1,12 @@
+[bot]
+firstblood_info_text = """
+# HTL TOPHACK FIRST BLOODS :bird:
+## What are first bloods?
+In Capture the Flag (CTF) competitions, **first bloods** refer to the initial successful capture of a flag by a team.
+It signifies the first team to penetrate the opponent's defenses and secure a flag, often earning points or recognition for their accomplishment.
+First bloods set the tone for the competition, highlighting the agility and strategic prowess of the team that achieves them.
+## So why are first bloods important now?
+It's simple: **First bloods** show the other teams that you are build different.
+You are simply better than others. :shushing_face: :deaf_person:
+"""
+embed_thumbnail_url = "https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fimg00.deviantart.net%2Fb604%2Fi%2F2012%2F228%2F7%2F5%2Fblood_drop_man_by_unicorn_skydancer08-d5bazt3.png&f=1&nofb=1&ipt=3f0c3f8c5835c0ce8ddcfb70832b1c40ff59054b23266a6f5cbc3977e13d9fc4&ipo=images"

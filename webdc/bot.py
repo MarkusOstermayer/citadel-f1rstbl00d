@@ -1,10 +1,14 @@
-import os
-import requests
-from discord.ext import tasks, commands
-import discord
-from discord import Embed
-from dotenv import load_dotenv
 import logging
+import os
+import tomllib
+
+import discord
+import requests
+from discord import Embed
+from discord.ext import commands
+from discord.ext import tasks
+from dotenv import load_dotenv
+
 
 # Load env vars
 load_dotenv()
@@ -19,6 +23,28 @@ logging.basicConfig(level=logging.INFO)
 channel = None
 usedblood = []
 
+def load_config(filename: str="config.toml"):
+    try:
+        with open(filename, "rb") as f:
+                data = tomllib.load(f)
+    except tomllib.TOMLDecodeError as toml_error:
+        logging.error(f"Format-Error in the toml-file: {toml_error}")
+        exit(1)
+    except FileNotFoundError as fnf_error:
+        logging.error(f"{fnf_error}")
+        exit(2)
+
+    # Check that the keys needed for the bot are specified
+    if "bot" not in data:
+        logging.error("The config does not contain a [bot]-section!")
+        exit(3)
+
+    for needed_key in ["embed_thumbnail_url", "embed_thumbnail_url"]:
+        if needed_key not in data["bot"]:
+            logging.error(f"The [bot]-section does not contain a {needed_key}-value!")
+            exit(4)
+
+    return data
 
 @bot.event
 async def on_ready():
@@ -34,7 +60,7 @@ async def on_ready():
     try:
         channel = bot.get_channel(int(CHANNEL_ID))
         if channel is None:
-            print(f"Channel with ID {CHANNEL_ID} not found")
+            logging.error(f"Channel with ID {CHANNEL_ID} not found")
         else:
             logging.info(f"Connected to channel {channel.name}")
     except Exception as e:
@@ -50,17 +76,8 @@ async def firstblood(ctx):
 
     It will send a message with the explanation of what FirstBloods are.
     """
-    print("Command FIRSTBLOOD called")
-    await ctx.send(
-        "# HTL TOPHACK FIRST BLOODS :bird:\n"
-        "## What are first bloods?\n"
-        "In Capture the Flag (CTF) competitions, **first bloods** refer to the initial successful capture of a flag by a team.\n"
-        "It signifies the first team to penetrate the opponent's defenses and secure a flag, often earning points or recognition for their accomplishment.\n"
-        "First bloods set the tone for the competition, highlighting the agility and strategic prowess of the team that achieves them.\n"
-        "## So why are first bloods important now?\n"
-        "It's simple: **First bloods** show the other teams that you are build different.\n"
-        "You are simply better than others. :shushing_face: :deaf_person: \n"
-    )
+    logging.info("Command FIRSTBLOOD called")
+    await ctx.send(data["bot"]["firstblood_info_text"])
 
 
 @tasks.loop(seconds=10)
@@ -82,7 +99,7 @@ async def my_background_task():
                     embed.set_author(name="CHALLENGE SOLVED (FIRST BLOOD)")
                     embed.description = f"- Solved by: **@{item['username']}**\n- Time solved: **{item['date'].split('T')[1]}**\n- Category: {item['challenge_category']}\n- Difficulty: {item['challenge_difficulty']}\n\n Good job!"
                     embed.set_thumbnail(
-                        url="https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fimg00.deviantart.net%2Fb604%2Fi%2F2012%2F228%2F7%2F5%2Fblood_drop_man_by_unicorn_skydancer08-d5bazt3.png&f=1&nofb=1&ipt=3f0c3f8c5835c0ce8ddcfb70832b1c40ff59054b23266a6f5cbc3977e13d9fc4&ipo=images"
+                        url=data["bot"]["embed_thumbnail_url"]
                     )  # Replace with your image URL (Current one is a banger)
                     new_msg = await channel.send(embed=embed)
                     await new_msg.add_reaction("🩸")
@@ -105,5 +122,5 @@ def get_all_firstblood():
     else:
         return None
 
-
+config = load_config(os.getenv('CONFIG_PATH', "./config.toml"))
 bot.run(TOKEN)

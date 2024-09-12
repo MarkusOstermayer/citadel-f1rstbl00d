@@ -12,6 +12,7 @@ RUN pip install --no-cache-dir -r requirements.txt
 
 # Copy app files and supervisord configuration file
 COPY ./webdc webdc
+COPY ./config.toml ./webdc/config.toml
 COPY ./supervisord.conf /etc/supervisor/conf.d/supervisord.conf
 
 # expose port 80
